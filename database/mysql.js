@@ -11,7 +11,11 @@ const pool = mysql.createPool({
 });
 const sqlStatement = {
 	generateAndSaveRSVPToken: "insert into weddingguests.tokens(tokenId, rep_name, valid) values (?, ?, ?)",
-	validateToken: "select valid from weddingguests.tokens where tokenId=?"
+	validateToken: "select valid from weddingguests.tokens where tokenId=?",
+	insertGuest: "insert into weddingguests.guests(food_id, allergy_id, relationship_id, token_id, name, email) values (?,?,?,?,?,?)",
+	invalidateToken: 
+	"update weddingguests.tokens set valid = false where tokenId = ?;",
+	newAllergy: "insert into weddingguests.allergies(allergy) values (?)"
 }
 
 const makeQuery = (sqlQuery, pool) => {
@@ -29,9 +33,30 @@ const makeQuery = (sqlQuery, pool) => {
     };
 };
 
+const makeTransaction = (q1, q2) => {
+	return async(args1, args2) => {
+		const conn = await pool.getConnection()
+		try{
+			await conn.beginTransaction()
+			await conn.query(/* sqlStatement.insertGuest */ q1, args1||[]/* [1,2,2,"244d7084","lhei", "lhei@gmail.com"] */)
+			await conn.query(/* sqlStatement.invalidateToken */ q2, args2||[]/* ["244d7084"] */)
+			await conn.commit()
+			//res.status(200).json({message: "Guest inserted"})
+		} catch(e){
+			console.log(e)
+			conn.rollback()
+			//res.status(500).json({message:e})
+		} finally{
+			conn.release()
+		}
+	}
+
+}
 const sqlQuery = {
 	generateAndSaveRSVPToken: makeQuery(sqlStatement.generateAndSaveRSVPToken, pool),
-	validateToken: makeQuery(sqlStatement.validateToken, pool)
+	validateToken: makeQuery(sqlStatement.validateToken, pool),
+	insertGuestInvalidateTokenTx: makeTransaction(sqlStatement.insertGuest, sqlStatement.invalidateToken),
+
 }
 
 

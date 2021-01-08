@@ -3,9 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const router = express.Router()
 const {pool, sqlQuery} = require("../database/mysql")
 
-router.post('/', (req,res)=> {
 
-})
 
 router.get('/all', (req, res)=> {
     console.log("get all guests")
@@ -14,7 +12,7 @@ router.get('/all', (req, res)=> {
 })
 
 //generate a unique token for a unique rsvp link
-router.post('/rsvp', (req, res)=> {
+router.post('/rsvp-link', (req, res)=> {
     const tokenId = uuidv4().substring(0,8)
     const rep_name = (req.body['repName']).toString().toLowerCase()
     const valid = true
@@ -52,4 +50,23 @@ router.get('/rsvp/:token', (req,res)=> {
         })
 })
 
+
+router.post('/rsvp', (req,res)=> {
+    const {email, name, relationshipId,  tokenId , foodId, allergyId} = req.body
+
+            sqlQuery.insertGuestInvalidateTokenTx([foodId,allergyId,relationshipId,tokenId,name,email], [tokenId])
+                .then(result => {
+                    console.log(result)
+                    res.status(200).json({message: "Successfully added Guest"})
+                    
+                })
+                .catch(e=> {
+                    console.log(e)
+                    res.status(500).json({message: "Server Error"})
+                })
+
+    
+
+
+})
 module.exports = router
