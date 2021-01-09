@@ -53,20 +53,14 @@ router.get('/rsvp/:token', (req,res)=> {
 
 router.post('/rsvp', (req,res)=> {
     const {email, name, relationshipId,  tokenId , foodId, allergyId} = req.body
-
-            sqlQuery.insertGuestInvalidateTokenTx([foodId,allergyId,relationshipId,tokenId,name,email], [tokenId])
-                .then(result => {
-                    console.log(result)
+            sqlQuery.insertGuestInvalidateTokenTx([[foodId,allergyId,relationshipId,tokenId,name,email], [tokenId]], res)
+                .then(() => {
                     res.status(200).json({message: "Successfully added Guest"})
-                    
                 })
                 .catch(e=> {
-                    console.log(e)
+                    console.log("1>>>>>>", e)
                     res.status(500).json({message: "Server Error"})
                 })
-
-    
-
-
 })
+
 module.exports = router
