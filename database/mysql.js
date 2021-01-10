@@ -22,6 +22,9 @@ const sqlStatement = {
 	getAllRelations: "select id, type from weddingguests.relationships",
 	addRelations: "insert into weddingguests.relationships(type) values (?)",
 	getFoodPref: "select id, food_type,notes from weddingguests.foods;",
+	attendingGuestDetails :
+	"select g.first_name, g.last_name, g.table, g.email,r.type,a.allergy,f.food_type from weddingguests.guests as g join weddingguests.relationships as r on g.relationship_id = r.id join weddingguests.allergies as a on g.allergy_id = a.id join weddingguests.foods as f on g.food_id = f.id;",
+	invitedGuests: "select * from weddingguests.tokens"
 };
 
 const makeQuery = (sqlQuery, pool) => {
@@ -79,6 +82,8 @@ const sqlQuery = {
 	addRelations: makeQuery(sqlStatement.addRelations, pool),
 	getFoodPref: makeQuery(sqlStatement.getFoodPref, pool),
 	getAllergy: makeQuery(sqlStatement.getAllergy, pool),
+	attendingGuestDetails: makeQuery(sqlStatement.attendingGuestDetails, pool),
+	invitedGuests: makeQuery(sqlStatement.invitedGuests, pool)
 };
 
 module.exports = { pool, sqlQuery };

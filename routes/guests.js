@@ -9,6 +9,33 @@ router.get("/all", (req, res) => {
 	res.json({ message: "hello its working" });
 });
 
+//get all attending guest info 
+router.get("/attending", (req,res)=> {
+    sqlQuery.attendingGuestDetails()
+        .then(result=> {
+            console.log(result)
+            res.status(200).json(result)
+        })
+        .catch(e=> {
+            console.log(e)
+            res.status(500).json({message: "Server Error"})
+        })
+})
+
+//get total invited (count token number)
+router.get("/invited",(req,res)=> {
+    sqlQuery.invitedGuests()
+        .then(result => {
+            console.log(result)
+            res.status(200).json(result)
+        })
+        .catch(e=> {
+            console.log(e)
+            res.status(500).json({message: "Server Error"})
+        })
+})
+
+
 //generate a unique token for a unique rsvp link
 router.post("/rsvp-link", (req, res) => {
 	const tokenId = uuidv4().substring(0, 8);
