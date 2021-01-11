@@ -25,8 +25,9 @@ const sqlStatement = {
 	addRelations: `insert into weddingguests.relationships(type) values (?)`,
 	getFoodPref: `select id, food_type,notes from weddingguests.foods;`,
 	attendingGuestDetails :
-	`select g.first_name, g.last_name, g.table, g.email,r.type,a.allergy,f.food_type from weddingguests.guests as g join weddingguests.relationships as r on g.relationship_id = r.id join weddingguests.allergies as a on g.allergy_id = a.id join weddingguests.foods as f on g.food_id = f.id;`,
-	invitedGuests: `select * from weddingguests.tokens`
+	`select g.id ,g.first_name, g.last_name, g.table, g.email,a.allergy,f.food_type from weddingguests.guests as g  join weddingguests.allergies as a on g.allergy_id = a.id join weddingguests.foods as f on g.food_id = f.id;`,
+	invitedGuests: `select * from weddingguests.tokens`,
+	checkIn: `update weddingguests.guests set arrived= true where id = ?`
 };
 
 const makeQuery = (sqlQuery, pool) => {
@@ -85,7 +86,8 @@ const sqlQuery = {
 	getFoodPref: makeQuery(sqlStatement.getFoodPref, pool),
 	getAllergy: makeQuery(sqlStatement.getAllergy, pool),
 	attendingGuestDetails: makeQuery(sqlStatement.attendingGuestDetails, pool),
-	invitedGuests: makeQuery(sqlStatement.invitedGuests, pool)
+	invitedGuests: makeQuery(sqlStatement.invitedGuests, pool),
+	checkIn: makeQuery(sqlStatement.checkIn, pool)
 };
 
 module.exports = { pool, sqlQuery };

@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `weddingguests`.`guests`(
     `first_name` VARCHAR(50) NOT NULL,
     `last_name` VARCHAR(50) NOT NULL,
     `attending` BOOLEAN NULL DEFAULT NULL,
+    `arrived` BOOLEAN NULL DEFAULT NULL,
     `table` INT(3) NULL DEFAULT NULL,
     `email` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
