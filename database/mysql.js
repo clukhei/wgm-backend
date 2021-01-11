@@ -1,6 +1,8 @@
 require("dotenv").config();
 const mysql = require("mysql2/promise");
 
+//change to be able to use  weddingguests and heroku_81ca0cf3689ff4d
+
 const pool = mysql.createPool({
 	host: process.env.MYSQL_SERVER,
 	port: process.env.MYSQL_SVR_PORT,
@@ -11,20 +13,20 @@ const pool = mysql.createPool({
 });
 const sqlStatement = {
 	generateAndSaveRSVPToken:
-		"insert into weddingguests.tokens(tokenId, rep_name, valid) values (?, ?, ?)",
-	validateToken: "select valid from weddingguests.tokens where tokenId=?",
+		`insert into weddingguests.tokens(tokenId, rep_name, valid) values (?, ?, ?)`,
+	validateToken: `select valid from weddingguests.tokens where tokenId=?`,
 	insertGuest:
-		"insert into weddingguests.guests(food_id, allergy_id, relationship_id, token_id,first_name, last_name, email, attending) values (?,?,?,?,?,?,?,?)",
+		`insert into weddingguests.guests(food_id, allergy_id, relationship_id, token_id,first_name, last_name, email, attending) values (?,?,?,?,?,?,?,?)`,
 	invalidateToken:
-		"update weddingguests.tokens set valid = false where tokenId = ?;",
-	addAllergy: "insert into weddingguests.allergies(allergy) values (?)",
-	getAllergy: "select id, allergy from weddingguests.allergies;",
-	getAllRelations: "select id, type from weddingguests.relationships",
-	addRelations: "insert into weddingguests.relationships(type) values (?)",
-	getFoodPref: "select id, food_type,notes from weddingguests.foods;",
+		`update weddingguests.tokens set valid = false where tokenId = ?;`,
+	addAllergy: `insert into weddingguests.allergies(allergy) values (?)`,
+	getAllergy: `select id, allergy from weddingguests.allergies;`,
+	getAllRelations: `select id, type from weddingguests.relationships`,
+	addRelations: `insert into weddingguests.relationships(type) values (?)`,
+	getFoodPref: `select id, food_type,notes from weddingguests.foods;`,
 	attendingGuestDetails :
-	"select g.first_name, g.last_name, g.table, g.email,r.type,a.allergy,f.food_type from weddingguests.guests as g join weddingguests.relationships as r on g.relationship_id = r.id join weddingguests.allergies as a on g.allergy_id = a.id join weddingguests.foods as f on g.food_id = f.id;",
-	invitedGuests: "select * from weddingguests.tokens"
+	`select g.first_name, g.last_name, g.table, g.email,r.type,a.allergy,f.food_type from weddingguests.guests as g join weddingguests.relationships as r on g.relationship_id = r.id join weddingguests.allergies as a on g.allergy_id = a.id join weddingguests.foods as f on g.food_id = f.id;`,
+	invitedGuests: `select * from weddingguests.tokens`
 };
 
 const makeQuery = (sqlQuery, pool) => {
