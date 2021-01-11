@@ -83,7 +83,7 @@ router.post("/rsvp", (req, res) => {
 		email,
 		firstName,
 		lastName,
-		relationshipId,
+
 		tokenId,
 		foodId,
 		allergyId,
@@ -94,7 +94,6 @@ router.post("/rsvp", (req, res) => {
 			[
 				foodId,
 				allergyId,
-				relationshipId,
 				tokenId,
 				firstName,
 				lastName,

@@ -16,7 +16,7 @@ const sqlStatement = {
 		`insert into weddingguests.tokens(tokenId, rep_name, valid) values (?, ?, ?)`,
 	validateToken: `select valid from weddingguests.tokens where tokenId=?`,
 	insertGuest:
-		`insert into weddingguests.guests(food_id, allergy_id, relationship_id, token_id,first_name, last_name, email, attending) values (?,?,?,?,?,?,?,?)`,
+		`insert into weddingguests.guests(food_id, allergy_id, token_id,first_name, last_name, email, attending) values (?,?,?,?,?,?,?)`,
 	invalidateToken:
 		`update weddingguests.tokens set valid = false where tokenId = ?;`,
 	addAllergy: `insert into weddingguests.allergies(allergy) values (?)`,
