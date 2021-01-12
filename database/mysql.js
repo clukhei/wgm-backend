@@ -3,7 +3,6 @@ const mysql = require("mysql2/promise");
 
 //change to be able to use  weddingguests and heroku_81ca0cf3689ff4d
 
-
 const pool = mysql.createPool({
 	host: process.env.MYSQL_SERVER,
 	port: process.env.MYSQL_SVR_PORT,
