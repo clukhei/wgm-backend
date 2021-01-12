@@ -6,9 +6,11 @@ const cors = require('cors')
 const guestsRouter = require('./routes/guests')
 const infoRouter = require('./routes/info')
 const checkinRouter= require("./routes/checkin")
+const paymentRouter = require("./routes/payment")
 const rsvpRouter = require("./routes/rsvp")
 const auth = require('./auth/auth')
 const passport = require("./auth/passport")
+const mongoClient = require('./database/mongo')
 
 const PORT =
 	parseInt(process.argv[2]) || parseInt(process.env.PORT) || 3000;
@@ -24,24 +26,28 @@ app.use('/info', infoRouter)
 app.use('/checkin',checkinRouter)
 app.use('/rsvp', rsvpRouter)
 app.post('/login', auth.login)
+app.use('/payment',paymentRouter )
 
- pool.getConnection()
+const startSQL = pool.getConnection()
 .then((conn) => {
 	conn.ping();
 	console.log("pinged");
-	app.listen(PORT ,()=> {
-					console.log(`${PORT} started `)
-				})
+	// app.listen(PORT ,()=> {
+	// 				console.log(`${PORT} started `)
+	// 			})
 	return conn;
 })
 .then((conn) => conn.release());
 
 
 
-// Promise.all([mongoClient.connect(), startSQL])
-// 	.then(()=> {
-// 		app.listen(PORT ,()=> {
-// 			console.log(`${PORT} started `)
-// 		})
-// 	})
+Promise.all([mongoClient.connect(), startSQL])
+	.then(([m,s])=> {
+		console.log(m)
+		console.log('hello')
+		app.listen(PORT ,()=> {
+			console.log(`${PORT} started `)
+		})
+	})
+	.catch(e=> console.log)
 

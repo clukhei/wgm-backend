@@ -29,7 +29,8 @@ const sqlStatement = {
 	attendingGuestDetails :
 	`select g.id ,g.first_name, g.last_name, g.table, g.email,a.allergy,f.food_type from weddingguests.guests as g  join weddingguests.allergies as a on g.allergy_id = a.id join weddingguests.foods as f on g.food_id = f.id;`,
 	invitedGuests: `select * from weddingguests.tokens`,
-	checkIn: `update weddingguests.guests set arrived= true where id = ?`
+	checkIn: `update weddingguests.guests set arrived= true where id = ?`,
+	updatePayment: `update weddingguests.guests set angbao_record= ? where id=?`
 };
 
 const makeQuery = (sqlQuery, pool) => {
@@ -89,7 +90,8 @@ const sqlQuery = {
 	getAllergy: makeQuery(sqlStatement.getAllergy, pool),
 	attendingGuestDetails: makeQuery(sqlStatement.attendingGuestDetails, pool),
 	invitedGuests: makeQuery(sqlStatement.invitedGuests, pool),
-	checkIn: makeQuery(sqlStatement.checkIn, pool)
+	checkIn: makeQuery(sqlStatement.checkIn, pool),
+	updatePayment: makeQuery(sqlStatement.updatePayment,pool)
 };
 
 module.exports = { pool, sqlQuery };
