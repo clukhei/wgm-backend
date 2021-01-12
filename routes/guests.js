@@ -3,17 +3,6 @@ const { v4: uuidv4 } = require("uuid");
 const router = express.Router();
 const { pool, sqlQuery } = require("../database/mysql");
 
-//checkin
-// router.get("/checkin/:id", (req, res) => {
-// 	const id = req.params['id']
-// 	sqlQuery.checkIn([id]).then(() => {
-// 		res.status(200);
-// 		res.json({ message: "Updated" });
-// 	}).catch(e=> {
-// 		console.log(e)
-// 		res.status(500).json({message: "Server Error"})
-// 	})
-// });
 router.get("/all", (req, res) => {
 	console.log("get all guests");
 	res.status(200);

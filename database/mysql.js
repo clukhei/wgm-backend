@@ -11,6 +11,8 @@ const pool = mysql.createPool({
 	database: process.env.MYSQL_SCHEMA,
 	connectionLimit: process.env.MYSQL_CON_LIMIT,
 });
+
+
 const sqlStatement = {
 	generateAndSaveRSVPToken:
 		`insert into weddingguests.tokens(tokenId, rep_name, valid) values (?, ?, ?)`,
