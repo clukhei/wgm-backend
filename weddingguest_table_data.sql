@@ -24,3 +24,4 @@ INSERT INTO `relationships`(`type`) VALUES ('groom side');
 
 INSERT INTO `guests` (`food_id`,`allergy_id`,`relationship_id`, `first_name`,`last_name`,`email`) values ( 1,1,1,'lucy','chong','lucy@gmail.com');
 
+INSERT INTO `users` (`first_name`, `last_name`, `email`, `passwordHash`) values (`lukhei`, `chong`, `lukheichong@gmail.com`, sha1('lukheichong'));
