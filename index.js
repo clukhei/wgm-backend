@@ -5,7 +5,8 @@ const {pool} = require('./database/mysql')
 const cors = require('cors')
 const guestsRouter = require('./routes/guests')
 const infoRouter = require('./routes/info')
-
+const checkinRouter= require("./routes/checkin")
+const rsvpRouter = require("./routes/rsvp")
 const auth = require('./auth/auth')
 const passport = require("./auth/passport")
 
@@ -19,8 +20,9 @@ app.use(cors())
 app.use(passport.initialize())
 
 app.use('/guests', auth.require, guestsRouter)
-app.use('/info', auth.require, infoRouter)
-
+app.use('/info', infoRouter)
+app.use('/checkin',checkinRouter)
+app.use('/rsvp', rsvpRouter)
 app.post('/login', auth.login)
 
  pool.getConnection()

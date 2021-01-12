@@ -4,16 +4,16 @@ const router = express.Router();
 const { pool, sqlQuery } = require("../database/mysql");
 
 //checkin
-router.get("/checkin/:id", (req, res) => {
-	const id = req.params['id']
-	sqlQuery.checkIn([id]).then(() => {
-		res.status(200);
-		res.json({ message: "Updated" });
-	}).catch(e=> {
-		console.log(e)
-		res.status(500).json({message: "Server Error"})
-	})
-});
+// router.get("/checkin/:id", (req, res) => {
+// 	const id = req.params['id']
+// 	sqlQuery.checkIn([id]).then(() => {
+// 		res.status(200);
+// 		res.json({ message: "Updated" });
+// 	}).catch(e=> {
+// 		console.log(e)
+// 		res.status(500).json({message: "Server Error"})
+// 	})
+// });
 router.get("/all", (req, res) => {
 	console.log("get all guests");
 	res.status(200);
@@ -65,59 +65,6 @@ router.post("/rsvp-link", (req, res) => {
 			res.status(500).json({ message: "Server Error" });
 		});
 });
-//check if token is valid before rsvp form is showed
 
-router.get("/rsvp/:token", (req, res) => {
-	const tokenId = req.params["token"];
-	sqlQuery
-		.validateToken([tokenId])
-		.then(([result, _]) => {
-			console.log(result);
-			let valid;
-
-			if (!result || result.valid === 0) {
-				valid = false;
-			} else {
-				valid = true;
-			}
-
-			res.status(200);
-			res.json({ valid });
-		})
-		.catch((e) => {
-			console.log(e);
-			res.status(500).json({ message: "Server Error" });
-		});
-});
-
-router.post("/rsvp", (req, res) => {
-	const {
-		email,
-		firstName,
-		lastName,
-
-		tokenId,
-		foodId,
-		allergyId,
-		attending,
-	} = req.body;
-	sqlQuery
-		.insertGuestInvalidateTokenTx(
-			[
-				[
-					foodId,
-					allergyId,
-					tokenId,
-					firstName,
-					lastName,
-					email,
-					attending,
-				],
-				[tokenId],
-			],
-			res
-		)
-		.catch((e) => console.log(e));
-});
 
 module.exports = router;
