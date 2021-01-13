@@ -9,7 +9,31 @@ const MONGO_DB = "wgm";
 const MONGO_COL = "payments";
 
 router.post("/success", async(req,res)=> {
-	
+	const paymentRecord = req.body
+	paymentRecord.timestamp = new Date()
+	try{
+		const result = await mongoClient
+		.db(MONGO_DB)
+		.collection(MONGO_COL)
+		.insertOne(paymentRecord)
+			if (result.insertedCount==1) {
+			  
+				const mongoId = result.insertedId.toString()
+			 
+			  await sqlQuery.updatePayment([mongoId, paymentRecord.id])
+				res.type("application/json");
+				res.status(200).json(
+					{message: "updated success"}
+				);
+			} else {
+				throw Error 
+			}
+
+	}catch(e){
+		console.log(e);
+		res.type("application/json");
+		res.status(500).json({ message: e });
+	}
 })
 
 router.post("/checkout", async (req, res) => {
@@ -34,37 +58,14 @@ router.post("/checkout", async (req, res) => {
 				},
 			],
 			mode: "payment",
-			success_url: `http://localhost:4200/payment/success?guestId=${id}&guest=${name}`,
+			success_url: `http://localhost:4200/payment/success?guestId=${id}&guest=${name}&amount=${unit_amount}`,
 			cancel_url:
 				"http://localhost:4200/payment/failure",
 		});
-		console.log(session);
-		if (session.id) {
-			const paymentRecord = {
-				name,
-				guestId: id,
-				amount: unit_amount,
-				paymentSessionId: session.id,
-				timestamp: new Date(),
-			};
-
-			const result = await mongoClient
-				.db(MONGO_DB)
-				.collection(MONGO_COL)
-                .insertOne(paymentRecord)
-					if (result.insertedCount==1) {
-                      
-                        const mongoId = result.insertedId.toString()
-                     
-                      await sqlQuery.updatePayment([mongoId, id])
-						res.type("application/json");
-						res.status(200).json(
-							session
-						);
-					}
-				
-		}
-	} catch (e) {
+		res.status(200).json(session)
+		
+		
+	} catch(e) {
 		console.log(e);
 		res.type("application/json");
 		res.status(500).json({ message: e });
