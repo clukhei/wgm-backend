@@ -43,8 +43,7 @@ const startSQL = pool.getConnection()
 
 Promise.all([mongoClient.connect(), startSQL])
 	.then(([m,s])=> {
-		console.log(m)
-		console.log('hello')
+	
 		app.listen(PORT ,()=> {
 			console.log(`${PORT} started `)
 		})

@@ -8,21 +8,26 @@ const {sqlQuery} = require("../database/mysql")
 const MONGO_DB = "wgm";
 const MONGO_COL = "payments";
 
+
 router.post("/checkout", async (req, res) => {
-	const { angBao, name, id } = req.body;
+	const { unit_amount, name, id } = req.body;
+	console.log(unit_amount)
+
 	try {
+		
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ["card"],
 			line_items: [
 				{
+					
 					price_data: {
 						currency: "sgd",
 						product_data: {
 							name: "Ang Bao",
 						},
-						unit_amount: angBao,
+						unit_amount: unit_amount *100,
 					},
-					quantity: 1,
+					quantity: 1
 				},
 			],
 			mode: "payment",
@@ -35,7 +40,7 @@ router.post("/checkout", async (req, res) => {
 			const paymentRecord = {
 				name,
 				guestId: id,
-				amount: angBao,
+				amount: unit_amount,
 				paymentSessionId: session.id,
 				timestamp: new Date(),
 			};
@@ -45,15 +50,14 @@ router.post("/checkout", async (req, res) => {
 				.collection(MONGO_COL)
                 .insertOne(paymentRecord)
 					if (result.insertedCount==1) {
-                        console.log(result)
+                      
                         const mongoId = result.insertedId.toString()
-                        console.log(mongoId)
+                     
                       await sqlQuery.updatePayment([mongoId, id])
 						res.type("application/json");
-						res.status(200).json({
-							mongoId,
-							paymentSessionId: session.id,
-						});
+						res.status(200).json(
+							session
+						);
 					}
 				
 		}
