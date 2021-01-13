@@ -31,9 +31,9 @@ router.post("/checkout", async (req, res) => {
 				},
 			],
 			mode: "payment",
-			success_url: "https://www.entrepreneur.com/article/244428",
+			success_url: "http://localhost:4200/payment/success",
 			cancel_url:
-				"https://medium.com/better-programming/embrace-failure-its-part-of-the-journey-to-success-9322800a7752",
+				"http://localhost:4200/payment/failure",
 		});
 		console.log(session);
 		if (session.id) {
