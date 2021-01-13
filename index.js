@@ -15,10 +15,11 @@ const mongoClient = require('./database/mongo')
 const PORT =
 	parseInt(process.argv[2]) || parseInt(process.env.PORT) || 3000;
 const app = express()
+app.use(cors())
 app.use(morgan('combined'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors())
+
 app.use(passport.initialize())
 
 
