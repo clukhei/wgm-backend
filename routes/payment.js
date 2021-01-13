@@ -8,6 +8,9 @@ const {sqlQuery} = require("../database/mysql")
 const MONGO_DB = "wgm";
 const MONGO_COL = "payments";
 
+router.post("/success", async(req,res)=> {
+	
+})
 
 router.post("/checkout", async (req, res) => {
 	const { unit_amount, name, id } = req.body;
@@ -31,7 +34,7 @@ router.post("/checkout", async (req, res) => {
 				},
 			],
 			mode: "payment",
-			success_url: "http://localhost:4200/payment/success",
+			success_url: `http://localhost:4200/payment/success?guestId=${id}&guest=${name}`,
 			cancel_url:
 				"http://localhost:4200/payment/failure",
 		});
