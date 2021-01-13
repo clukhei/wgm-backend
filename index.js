@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 app.use(passport.initialize())
 
+
 app.use('/guests', auth.require, guestsRouter)
 app.use('/info', infoRouter)
 app.use('/checkin',checkinRouter)

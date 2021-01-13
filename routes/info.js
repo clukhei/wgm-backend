@@ -3,6 +3,18 @@ const express = require("express");
 const router = express.Router();
 const { pool, sqlQuery } = require("../database/mysql");
 
+router.get("/guestnames", (req,res)=> {
+	sqlQuery	
+		.getGuestNames()
+		.then(result => {
+			console.log(result)
+			res.status(200).json(result)
+		})
+		.catch((e) => {
+			console.log(e);
+			res.status(500).json({ message: "Server Error" });
+		});
+})
 router.get("/relationship", (req, res) => {
 	sqlQuery
 		.getAllRelations()
