@@ -27,7 +27,7 @@ const sqlStatement = {
 	addRelations: `insert into weddingguests.relationships(type) values (?)`,
 	getFoodPref: `select id, food_type,notes from weddingguests.foods;`,
 	attendingGuestDetails :
-	`select g.id ,g.first_name, g.last_name, g.table, g.email,a.allergy,f.food_type from weddingguests.guests as g  join weddingguests.allergies as a on g.allergy_id = a.id join weddingguests.foods as f on g.food_id = f.id;`,
+	`select g.id ,g.first_name, g.last_name, g.tableNo, g.email,a.allergy,f.food_type from weddingguests.guests as g  join weddingguests.allergies as a on g.allergy_id = a.id join weddingguests.foods as f on g.food_id = f.id;`,
 	invitedGuests: `select * from weddingguests.tokens`,
 	checkIn: `update weddingguests.guests set arrived= true where id = ?`,
 	updatePayment: `update weddingguests.guests set angbao_record= ? where id=?`,
