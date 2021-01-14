@@ -33,7 +33,8 @@ const sqlStatement = {
 	updatePayment: `update weddingguests.guests set angbao_record= ? where id=?`,
 	getGuestNames: `select id, first_name, last_name, tableNo from weddingguests.guests`,
 	//bulkInsert
-	updateTable: `UPDATE weddingguests.guests set tableNo = ? where id =?`
+	updateTable: `UPDATE weddingguests.guests set tableNo = ? where id =?`,
+	countArrivals: `SELECT count(*) as count from weddingguests.guests where arrived=1`
 };
 
 const makeQuery = (sqlQuery, pool) => {
@@ -97,6 +98,7 @@ const sqlQuery = {
 	checkIn: makeQuery(sqlStatement.checkIn, pool),
 	updatePayment: makeQuery(sqlStatement.updatePayment,pool),
 	getGuestNames : makeQuery(sqlStatement.getGuestNames, pool),
+	countArrivals: makeQuery(sqlStatement.countArrivals, pool)
 };
 
 module.exports = { pool, sqlQuery, makeTransaction,sqlStatement };

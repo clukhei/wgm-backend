@@ -56,6 +56,19 @@ router.get("/invited", (req, res) => {
 		});
 });
 
+router.get('/arrived-count', (req,res)=> {
+	sqlQuery
+	.countArrivals()
+	.then(result=> {
+		console.log(result)
+		res.status(200).json(result)
+	})
+	.catch((e) => {
+		console.log(e);
+		res.status(500).json({ message: "Server Error" });
+	});
+})
+
 //generate a unique token for a unique rsvp link
 router.post("/rsvp-link", (req, res) => {
 	const tokenId = uuidv4().substring(0, 8);
