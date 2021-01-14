@@ -31,7 +31,7 @@ const sqlStatement = {
 	invitedGuests: `select * from weddingguests.tokens`,
 	checkIn: `update weddingguests.guests set arrived= true where id = ?`,
 	updatePayment: `update weddingguests.guests set angbao_record= ? where id=?`,
-	getGuestNames: `select id, first_name, last_name from weddingguests.guests`,
+	getGuestNames: `select id, first_name, last_name, tableNo from weddingguests.guests`,
 	//bulkInsert
 	updateTable: `UPDATE weddingguests.guests set tableNo = ? where id =?`
 };
