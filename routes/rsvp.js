@@ -1,12 +1,12 @@
 const express = require("express");
-
+const nodeMailer = require('nodemailer')
 const router = express.Router();
-const {  sqlQuery } = require("../database/mysql");
+const { sqlQuery } = require("../database/mysql");
 
 //check if token is valid before rsvp form is showed
 
 router.get("/form", (req, res) => {
-    const tokenId = req.query["token"]
+	const tokenId = req.query["token"];
 	sqlQuery
 		.validateToken([tokenId])
 		.then(([result, _]) => {
@@ -55,7 +55,49 @@ router.post("/submit", (req, res) => {
 			],
 			res
 		)
+		.then(()=> sendEmail(req.body))
 		.catch((e) => console.log(e));
 });
 
-module.exports = router
+function sendEmail(payload) {
+	const mailConfig = {
+		host: process.env.MAILTRAP_HOST,
+		port: process.env.MAILTRAP_PORT,
+		auth: {
+			user: process.env.MAILTRAP_USER,
+			pass: process.env.MAILTRAP_PASS
+		}
+	}
+	const transporter = nodeMailer.createTransport(mailConfig)
+	const mailOptions = {
+		to: `${payload.email}`,
+		from: 'info@example.com'/* process.env.MAILTRAP_ADD */,
+		subject: "Details of so and so wedding dinner",
+		html: `
+		<body>
+		<h2> Dear ${payload.firstName},</h2>
+		<br>
+		<p>Thank you for being a part of this special day</p>
+		<br>
+		<p> See you on 14 January 2040 at Regent, 7pm"
+	<br>
+	<iframe
+	width="450"
+	height="300"
+	frameborder="0" style="border:0"
+	src="https://www.google.com/maps/embed/v1/place?key=${process.env.MAPS_API}&q=place_id:ChIJBZofrosZ2jER0MORa_XKmU0" allowfullscreen>
+  </iframe>
+
+		</body>
+		`,
+	};
+
+	return transporter.sendMail(mailOptions, (error,info)=> {
+		if (error){
+			return console.log(error)
+		}
+		console.log('Message sent:', info.messageId)
+	})
+}
+
+module.exports = router;
