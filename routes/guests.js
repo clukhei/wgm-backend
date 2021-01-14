@@ -1,7 +1,26 @@
 const express = require("express");
+const { ObjectID } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 const router = express.Router();
-const { pool, sqlQuery } = require("../database/mysql");
+const { pool, sqlQuery, makeTransaction, sqlStatement } = require("../database/mysql");
+
+router.post("/update-tableno", async (req,res)=> {
+	const dataArray = req.body //array of {id: 1, tableNo: 2}
+	const updateQueryArray = dataArray.map((e,i) => {
+		return `UPDATE weddingguests.guests set tableNo = ? where id = ? `
+	})
+	const argsArray= []
+	dataArray.forEach(e=> {
+		const values = Object.values(e).reverse()
+		argsArray.push(values)
+	})	
+	const updateTableTx = makeTransaction(updateQueryArray, pool)
+	updateTableTx(argsArray, res)
+
+
+
+
+})
 
 router.get("/all", (req, res) => {
 	console.log("get all guests");

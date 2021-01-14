@@ -54,13 +54,13 @@ CREATE TABLE IF NOT EXISTS `weddingguests`.`guests`(
     `last_name` VARCHAR(50) NOT NULL,
     `attending` BOOLEAN NULL DEFAULT NULL,
     `arrived` BOOLEAN NULL DEFAULT NULL,
-    `table` INT(3) NULL DEFAULT NULL,
+    `tableNo` INT(3) NULL DEFAULT NULL,
     `angbao_record` VARCHAR(50) NULL DEFAULT NULL,
     `email` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    INDEX (`table`),
+    INDEX (`tableNo`),
     CONSTRAINT `fk_food`
         FOREIGN KEY (`food_id`) 
         REFERENCES `weddingguests`.`foods`(`id`)

@@ -31,7 +31,9 @@ const sqlStatement = {
 	invitedGuests: `select * from weddingguests.tokens`,
 	checkIn: `update weddingguests.guests set arrived= true where id = ?`,
 	updatePayment: `update weddingguests.guests set angbao_record= ? where id=?`,
-	getGuestNames: `select id, first_name, last_name from weddingguests.guests`
+	getGuestNames: `select id, first_name, last_name from weddingguests.guests`,
+	//bulkInsert
+	updateTable: `UPDATE weddingguests.guests set tableNo = ? where id =?`
 };
 
 const makeQuery = (sqlQuery, pool) => {
@@ -50,12 +52,13 @@ const makeQuery = (sqlQuery, pool) => {
 };
 
 //allow transaction to take up multiple queries and multiple args
-const makeTransaction = (qArray) => {
+const makeTransaction = (qArray, pool) => {
 	return async (argsArray, res) => {
 		const conn = await pool.getConnection();
 		try {
 			await conn.beginTransaction();
 			const mapQueries = qArray.map((q, i) => {
+				console.log(q, argsArray[i])
 				return conn.query(q, argsArray[i] || []);
 			});
 			await Promise.all(mapQueries);
@@ -79,12 +82,12 @@ const sqlQuery = {
 	insertGuestInvalidateTokenTx: makeTransaction([
 		sqlStatement.insertGuest,
 		sqlStatement.invalidateToken,
-	]),
+	], pool),
 	insertAllergyGuestInvalidateTokenTx: makeTransaction([
 		sqlStatement.addAllergy,
 		sqlStatement.insertGuest,
 		sqlStatement.invalidateToken,
-	]),
+	], pool),
 	getAllRelations: makeQuery(sqlStatement.getAllRelations, pool),
 	addRelations: makeQuery(sqlStatement.addRelations, pool),
 	getFoodPref: makeQuery(sqlStatement.getFoodPref, pool),
@@ -93,7 +96,7 @@ const sqlQuery = {
 	invitedGuests: makeQuery(sqlStatement.invitedGuests, pool),
 	checkIn: makeQuery(sqlStatement.checkIn, pool),
 	updatePayment: makeQuery(sqlStatement.updatePayment,pool),
-	getGuestNames : makeQuery(sqlStatement.getGuestNames, pool)
+	getGuestNames : makeQuery(sqlStatement.getGuestNames, pool),
 };
 
-module.exports = { pool, sqlQuery };
+module.exports = { pool, sqlQuery, makeTransaction,sqlStatement };
