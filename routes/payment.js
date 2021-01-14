@@ -58,9 +58,9 @@ router.post("/checkout", async (req, res) => {
 				},
 			],
 			mode: "payment",
-			success_url: `http://localhost:4200/payment/success?guestId=${id}&guest=${name}&unit_amount=${unit_amount}`,
+			success_url: `${process.env.WGM_FE_URL}/payment/success?guestId=${id}&guest=${name}&unit_amount=${unit_amount}`,
 			cancel_url:
-				"http://localhost:4200/payment/failure",
+				`${process.env.WGM_FE_URL}/payment/failure`,
 		});
 		res.status(200).json(session)
 		
