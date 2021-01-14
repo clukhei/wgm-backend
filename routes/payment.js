@@ -20,7 +20,7 @@ router.post("/success", async(req,res)=> {
 			  
 				const mongoId = result.insertedId.toString()
 			 
-			  await sqlQuery.updatePayment([mongoId, paymentRecord.id])
+			  await sqlQuery.updatePayment([mongoId, paymentRecord.guestId])
 				res.type("application/json");
 				res.status(200).json(
 					{message: "updated success"}
