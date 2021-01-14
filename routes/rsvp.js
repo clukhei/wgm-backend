@@ -1,7 +1,9 @@
 const express = require("express");
-const nodeMailer = require('nodemailer')
+const nodeMailer = require("nodemailer");
 const router = express.Router();
 const { sqlQuery } = require("../database/mysql");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 //check if token is valid before rsvp form is showed
 
@@ -55,23 +57,15 @@ router.post("/submit", (req, res) => {
 			],
 			res
 		)
-		.then(()=> sendEmail(req.body))
+		.then(() => sendEmail(req.body))
 		.catch((e) => console.log(e));
 });
 
 function sendEmail(payload) {
-	const mailConfig = {
-		host: process.env.MAILTRAP_HOST,
-		port: process.env.MAILTRAP_PORT,
-		auth: {
-			user: process.env.MAILTRAP_USER,
-			pass: process.env.MAILTRAP_PASS
-		}
-	}
-	const transporter = nodeMailer.createTransport(mailConfig)
-	const mailOptions = {
+
+	const msg = {
 		to: `${payload.email}`,
-		from: 'info@example.com'/* process.env.MAILTRAP_ADD */,
+		from: process.env.SENDGRID_VERIFIED_EMAIL,
 		subject: "Details of so and so wedding dinner",
 		html: `
 		<body>
@@ -80,24 +74,23 @@ function sendEmail(payload) {
 		<p>Thank you for being a part of this special day</p>
 		<br>
 		<p> See you on 14 January 2040 at Regent, 7pm"
-	<br>
-	<iframe
-	width="450"
-	height="300"
-	frameborder="0" style="border:0"
-	src="https://www.google.com/maps/embed/v1/place?key=${process.env.MAPS_API}&q=place_id:ChIJBZofrosZ2jER0MORa_XKmU0" allowfullscreen>
-  </iframe>
+		<br>
+		<p>Regards</p>	
 
 		</body>
 		`,
 	};
 
-	return transporter.sendMail(mailOptions, (error,info)=> {
-		if (error){
-			return console.log(error)
-		}
-		console.log('Message sent:', info.messageId)
-	})
+	sgMail
+		.send(msg)
+		.then((emailSent) => {
+			console.log(emailSent)
+			let statusCode = emailSent[0].statusCode;
+			if (statusCode ==202) {
+				console.log("check your email");
+			}
+		})
+		.catch((e) => console.log(e));
 }
 
 module.exports = router;
